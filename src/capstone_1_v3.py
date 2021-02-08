@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from scipy import stats  
 from statsmodels.discrete.discrete_model import Logit
 from statsmodels.tools import add_constant
-from sklearn.cross_validation import KFold
+from sklearn.model_selection import KFold
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.metrics import confusion_matrix
@@ -119,7 +119,7 @@ cols_to_standardize = ['duration_ms', 'loudness', 'tempo']
 ### ALL FUNCTIONS DEFINED HERE ####
 # load in main database of songs and attributes
 def load_data():
-    df = pd.read_csv('data/SpotifyAudioFeaturesNov2018.csv')
+    df = pd.read_csv('/home/pysolver33/Downloads/Spotify Song Data (Full).csv')
     return df
 
 # set some display options so easier to view all columns at once
@@ -842,12 +842,12 @@ def logistic_regression_with_kfold(df, cutoff=55, rand=0, sig_only=False):
     print(f"The coefs are: {classifier.fit(X,y).coef_}")
 
     # with kfold
-    kfold = KFold(len(y))
+    kfold = KFold(n_splits=len(y))
 
     accuracies = []
     precisions = []
     recalls = []
-
+    print("\nKFOLD!\n",kfold)
     for train_index, test_index in kfold:
         model = LogisticRegression()
         model.fit(X[train_index], y[train_index])
@@ -1169,18 +1169,23 @@ def sanity_check_test():
 if __name__ == "__main__":
     # load data
     df = load_data()
+    df.artists = df.artists.str.replace("[","")
+    df.artists = df.artists.str.replace("]","")
+    df.artists = df.artists.str.replace("'","")
+    df.rename(columns={'artists':'artist_name','id':'track_id','name':'track_name','year':'time_signature'},inplace=True)
+   
     # set nice view options for terminal viewing
     set_view_options(max_cols=50, max_rows=50, max_colwidth=40, dis_width=250)
 
     ''' All basic functions commented out so tons of plots don't pop up at once'''
     # get basic info from dataset
-    #get_df_info(df)
+    get_df_info(df)
 
     # Take a look at the data with truncated columns
-    #describe_cols(df, 9)
+    describe_cols(df, 9)
 
     # look at top correlations - look into multicollinearity
-    #get_top_abs_correlations(df, 10)
+    get_top_abs_correlations(df, 10)
     
     ''' All these plots are commented out for now '''  
     # scatter_plot(df, 'danceability', 'popularity')
@@ -1190,40 +1195,40 @@ if __name__ == "__main__":
     
     ''' Uncomment these to run any or all of the functions defined above 
         Many of these are plots, so commented out for now     ''' 
-    #linear_regression_initial(df)
-    #plot_pop_dist(df)
-    #undersample_plot(df)
-    #get_stats(df)
-    #plot_univ_dists(df, 85)
-    #plot_violin(df, 55)
-    #plot_pairplot(df, 500, 55)
-    #plot_keys(df, 55)
-    #plot_heatmap(df)
-    #calc_ANOVA(df, 55)
-    #df_samples = random_under_sampler(df, 80)
-    #linear_regression_initial(df_samples)
-    #plot_hist(df_samples)
-    #search_artist_track_name(df, "Chain", "Some")
-    #df_cols = add_cols(df, 80)
-    #df_split = split_sample_combine(df, cutoff=65, rand=0)
-    #linear_regression_final(df_split, show_plots=False)
-    #linear_regression_sklearn(df_split, show_plots=True)
-    #basic_logistic_regression(df, cutoff=80, rand=0)
-    #logistic_regression_with_kfold(df, cutoff=80, rand=0)
-    #logistic_regression_with_kfold(df, cutoff=80, rand=0, sig_only=True)
-    #print_confusion_matrix(df, cutoff=80, rand=0)
+    linear_regression_initial(df)
+    plot_pop_dist(df)
+    undersample_plot(df)
+    get_stats(df)
+    plot_univ_dists(df, 85)
+    plot_violin(df, 55)
+    plot_pairplot(df, 500, 55)
+    plot_keys(df, 55)
+    plot_heatmap(df)
+    calc_ANOVA(df, 55)
+    df_samples = random_under_sampler(df, 80)
+    linear_regression_initial(df_samples)
+    plot_hist(df_samples)
+    search_artist_track_name(df, "Chain", "Some")
+    df_cols = add_cols(df, 80)
+    df_split = split_sample_combine(df, cutoff=65, rand=0)
+    linear_regression_final(df_split, show_plots=False)
+    linear_regression_sklearn(df_split, show_plots=True)
+    basic_logistic_regression(df, cutoff=80, rand=0)
+    # logistic_regression_with_kfold(df, cutoff=80, rand=0)
+    # logistic_regression_with_kfold(df, cutoff=80, rand=0, sig_only=True)
+    print_confusion_matrix(df, cutoff=80, rand=0)
     
     # Calculate and plot final logistic regression values
     logistic_regression_final(df, plot_the_roc=False)
-    #plot_cutoffs_vs_metrics(df)
-    #plot_conf_matrix_Train()
-    #plot_conf_matrix_Test()
+    plot_cutoffs_vs_metrics(df)
+    plot_conf_matrix_Train()
+    plot_conf_matrix_Test()
     print(final_coefs)
-    #plot_final_coeffs()
-    #get_true_positives()
-    #get_true_negatives()
-    #get_false_positives()
-    #get_false_negatives()
+    plot_final_coeffs()
+    get_true_positives()
+    get_true_negatives()
+    get_false_positives()
+    get_false_negatives()
     sanity_check_test()
 
 
