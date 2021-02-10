@@ -97,7 +97,7 @@ were played a lot in the past.
 '''
 
 ### Define Global Variables ###
-global object_cols
+global objtect_cols
 object_cols = ['artist_name', 'track_id', 'track_name', 'key_notes','pop_cat']
 
 global numeric_cols
@@ -1188,10 +1188,10 @@ if __name__ == "__main__":
     get_top_abs_correlations(df, 10)
     
     ''' All these plots are commented out for now '''  
-    # scatter_plot(df, 'danceability', 'popularity')
-    # scatter_plot(df, 'duration_ms', 'popularity')
-    # scatter_plot(df, 'key', 'popularity')
-    # scatter_plot(df, 'acousticness', 'popularity')
+    scatter_plot(df, 'danceability', 'popularity')
+    scatter_plot(df, 'duration_ms', 'popularity')
+    scatter_plot(df, 'key', 'popularity')
+    scatter_plot(df, 'acousticness', 'popularity')
     
     ''' Uncomment these to run any or all of the functions defined above 
         Many of these are plots, so commented out for now     ''' 
